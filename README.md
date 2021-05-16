@@ -4,7 +4,7 @@ Creates a dungeon, which is simply a graph where each node has at most four neig
 
 To be used in an upcoming project.
 
-#Usage
+# Usage
 
 Compile with whatever compiler you want.
 
