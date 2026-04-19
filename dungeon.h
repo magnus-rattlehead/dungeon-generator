@@ -26,6 +26,7 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -71,6 +72,8 @@ void dungeon_destroy(Dungeon *d);
 
 uint64_t dungeon_seed(const Dungeon *d);
 int      dungeon_room_count(const Dungeon *d);
+int      dungeon_chunk_count(const Dungeon *d);
+size_t   dungeon_compressed_bytes(const Dungeon *d); /**< Sum of zbuf sizes over compressed chunks. */
 
 /** Returns false if the dungeon has no rooms. */
 bool dungeon_bounds(const Dungeon *d, int *x0, int *y0, int *x1, int *y1);

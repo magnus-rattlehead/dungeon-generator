@@ -4,10 +4,11 @@ DBGFLAGS = -std=c11 -Wall -Wextra -Wpedantic -O0 -g \
            -fsanitize=address,undefined -fno-omit-frame-pointer
 TARGET   = dungeon
 TEST_BIN = test_compression
-SRCS     = dungeon.c main.c
-HDRS     = dungeon.h
+SRCS      = dungeon.c main.c
+HDRS      = dungeon.h
+BENCH_BIN = bench_compression
 
-.PHONY: all debug test unit-test clean install
+.PHONY: all debug test unit-test bench clean install
 
 all: $(TARGET)
 
@@ -16,6 +17,12 @@ $(TARGET): $(SRCS) $(HDRS)
 
 $(TEST_BIN): test_compression.c dungeon.c $(HDRS)
 	$(CC) $(DBGFLAGS) -o $@ test_compression.c dungeon.c -lz
+
+$(BENCH_BIN): bench_compression.c dungeon.c $(HDRS)
+	$(CC) $(CFLAGS) -o $@ bench_compression.c dungeon.c -lz
+
+bench: $(BENCH_BIN)
+	./$(BENCH_BIN) 2>/dev/null
 
 unit-test: $(TEST_BIN)
 	@echo "=== Unit tests (chunk compression) ==="
@@ -47,7 +54,7 @@ test: $(TARGET) unit-test
 	@echo "All tests passed."
 
 clean:
-	rm -f $(TARGET) $(TARGET)_debug \
+	rm -f $(TARGET) $(TARGET)_debug $(BENCH_BIN) \
 	      /tmp/dg_a.txt /tmp/dg_b.txt /tmp/dg_c.txt \
 	      /tmp/dg_dense.txt /tmp/dg_winding.txt /tmp/dg_large.txt
 

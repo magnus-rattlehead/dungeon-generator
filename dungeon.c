@@ -555,6 +555,21 @@ void dungeon_destroy(Dungeon *d) {
 uint64_t dungeon_seed(const Dungeon *d)       { return d->cfg.seed; }
 int      dungeon_room_count(const Dungeon *d) { return d->room_count; }
 
+int dungeon_chunk_count(const Dungeon *d) {
+    int n = 0;
+    for (int b = 0; b < MAP_BUCKETS; b++)
+        for (Chunk *c = d->cmap.buckets[b]; c; c = c->next) n++;
+    return n;
+}
+
+size_t dungeon_compressed_bytes(const Dungeon *d) {
+    size_t total = 0;
+    for (int b = 0; b < MAP_BUCKETS; b++)
+        for (Chunk *c = d->cmap.buckets[b]; c; c = c->next)
+            if (c->is_compressed) total += c->zbuf_size;
+    return total;
+}
+
 bool dungeon_bounds(const Dungeon *d, int *x0, int *y0, int *x1, int *y1) {
     if (!d->bounds_valid) return false;
     *x0 = d->min_x; *y0 = d->min_y;
